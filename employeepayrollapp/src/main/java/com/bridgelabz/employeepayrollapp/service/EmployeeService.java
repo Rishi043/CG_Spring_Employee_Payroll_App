@@ -80,12 +80,12 @@ public class EmployeeService {
     // Save Employee using DTO
     public EmployeeDTO saveEmployeeDTO(EmployeeDTO employeeDTO) {
         if (USE_DATABASE) {
-            Employee employee = new Employee(employeeDTO.getName1(), employeeDTO.getSalary1());
+            Employee employee = new Employee(employeeDTO.getName(), employeeDTO.getSalary());
             Employee savedEmployee = repository.save(employee);
             return new EmployeeDTO(savedEmployee.getName(), savedEmployee.getSalary());
         }
 
-        Employee employee = new Employee(idCounter.getAndIncrement(), employeeDTO.getName1(), employeeDTO.getSalary1());
+        Employee employee = new Employee(idCounter.getAndIncrement(), employeeDTO.getName(), employeeDTO.getSalary());
         employeeList.add(employee);
         return new EmployeeDTO(employee.getName(), employee.getSalary());
     }
@@ -102,8 +102,3 @@ public class EmployeeService {
                 .collect(Collectors.toList());
     }
 }
-
-// UC-5 OUTPUT
-
-//   >curl -X GET "http://localhost:8080/employees" -w "\n"
-//   [{"id":1,"name":"Rishi","salary":80000.0},{"id":2,"name":"Mira","salary":75000.0},{"id":3,"name":"Alice","salary":60000.0}]
