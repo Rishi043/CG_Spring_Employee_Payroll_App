@@ -1,5 +1,6 @@
 package com.bridgelabz.employeepayrollapp.controller;
 
+import com.bridgelabz.employeepayrollapp.dto.EmployeeDTO;
 import com.bridgelabz.employeepayrollapp.model.Employee;
 import com.bridgelabz.employeepayrollapp.service.EmployeeService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +17,7 @@ public class EmployeeController {
     @Autowired
     private EmployeeService service;
 
-    // Get all employees
+    // Get all employees - UC1
     @GetMapping
     public List<Employee> getAllEmployees() {
         return service.getAllEmployees();
@@ -38,7 +39,7 @@ public class EmployeeController {
         return savedEmployee;
     }
 
-    // Update an employee uc2
+    // Update an employee - UC2
     @PutMapping("/{id}")
     public Employee updateEmployee(@PathVariable Long id, @RequestBody Employee employeeDetails) {
         return service.updateEmployee(id, employeeDetails);
@@ -49,5 +50,16 @@ public class EmployeeController {
     public ResponseEntity<Void> deleteEmployee(@PathVariable Long id) {
         service.deleteEmployee(id);
         return ResponseEntity.noContent().build();
+    }
+
+    // UC3 - Handle EmployeeDTO separately with a unique endpoint
+    @PostMapping("/dto")
+    public EmployeeDTO createEmployeeDTO(@RequestBody EmployeeDTO employeeDTO) {
+        return service.saveEmployeeDTO(employeeDTO);
+    }
+
+    @GetMapping("/dto")
+    public List<EmployeeDTO> getEmployeesDTO() {
+        return service.getAllEmployeesDTO();
     }
 }
