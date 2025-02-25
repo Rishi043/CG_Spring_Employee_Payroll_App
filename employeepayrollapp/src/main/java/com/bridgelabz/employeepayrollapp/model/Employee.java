@@ -1,5 +1,4 @@
 package com.bridgelabz.employeepayrollapp.model;
-
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
@@ -8,7 +7,6 @@ import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name = "employees")
-@NoArgsConstructor
 @AllArgsConstructor
 public class Employee {
 
@@ -21,6 +19,13 @@ public class Employee {
 
     @Min(value = 10000, message = "Salary must be at least 10000")
     private double salary;
+
+    public Employee() {}
+
+    public Employee(String name, double salary) {
+        this.name = name;
+        this.salary = salary;
+    }
 
     // Getters and Setters
     public Long getId() {

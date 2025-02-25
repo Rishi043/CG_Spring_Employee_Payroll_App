@@ -38,6 +38,12 @@ public class EmployeeController {
         return savedEmployee;
     }
 
+    // Update an employee uc2
+    @PutMapping("/{id}")
+    public Employee updateEmployee(@PathVariable Long id, @RequestBody Employee employeeDetails) {
+        return service.updateEmployee(id, employeeDetails);
+    }
+
     // Delete an employee by ID
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteEmployee(@PathVariable Long id) {
