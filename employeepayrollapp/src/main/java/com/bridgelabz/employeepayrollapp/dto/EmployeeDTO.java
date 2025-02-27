@@ -21,7 +21,7 @@ public class EmployeeDTO {
 // UC-10: Validate that the name field is not empty
           // Validate that the name field follows the pattern
     @NotBlank(message = "Name is required")
-    @Pattern(regexp = "^[A-Za-z\\s]+$", message = "Name must contain only letters and spaces")
+    @Pattern(regexp = "^[A-Za-z\\s]+$", message = "Employee name invalid!!")
     private String name;
 
 
