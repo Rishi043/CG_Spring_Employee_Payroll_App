@@ -1,6 +1,7 @@
 package com.bridgelabz.employeepayrollapp.service;
 
 import com.bridgelabz.employeepayrollapp.dto.EmployeeDTO;
+import com.bridgelabz.employeepayrollapp.exception.EmployeeNotFoundException; // UC-12: Import custom exception
 import com.bridgelabz.employeepayrollapp.model.Employee;
 import com.bridgelabz.employeepayrollapp.repository.EmployeeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -73,7 +74,8 @@ public class EmployeeService {
     public Employee updateEmployee(Long id, EmployeeDTO employeeDetails) {
         log.info("Updating employee with ID: {}", id);
         if (USE_DATABASE) {
-            Employee employee = repository.findById(id).orElseThrow();
+            // UC-12: Throw EmployeeNotFoundException if employee ID is not found
+            Employee employee = repository.findById(id).orElseThrow(() -> new EmployeeNotFoundException("Employee not found with ID: " + id));
             employee.setName(employeeDetails.getName());
             employee.setSalary(employeeDetails.getSalary());
             return repository.save(employee);
@@ -86,13 +88,17 @@ public class EmployeeService {
             employee.setSalary(employeeDetails.getSalary());
             return employee;
         }
-        throw new RuntimeException("Employee not found with ID: " + id);
+        throw new EmployeeNotFoundException("Employee not found with ID: " + id); // UC-12: Throw custom exception
     }
 
     // Delete an employee
     public void deleteEmployee(Long id) {
         log.info("Deleting employee with ID: {}", id);
         if (USE_DATABASE) {
+            // UC-12: Throw EmployeeNotFoundException if employee ID is not found
+            if (!repository.existsById(id)) {
+                throw new EmployeeNotFoundException("Employee not found with ID: " + id);
+            }
             repository.deleteById(id);
             return;
         }
