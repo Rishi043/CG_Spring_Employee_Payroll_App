@@ -18,7 +18,7 @@ import java.util.stream.Collectors;
 public class EmployeeService {
 
     // UC-9 Add Database setting as Environment Variable
-    private static final boolean USE_DATABASE = true; 
+    private static final boolean USE_DATABASE = true;
 
     @Autowired
     private EmployeeRepository repository; // JPA Repository
@@ -55,8 +55,22 @@ public class EmployeeService {
         return employee;
     }
 
+    // Save a new employee using DTO
+    public Employee saveEmployeeDTO(EmployeeDTO employeeDTO) {
+        log.info("Saving new employee using DTO: {}", employeeDTO);
+        Employee employee = new Employee(employeeDTO.getName(), employeeDTO.getSalary());
+        if (USE_DATABASE) {
+            Employee savedEmployee = repository.save(employee);
+            return savedEmployee;
+        }
+
+        employee.setId(idCounter.getAndIncrement()); // Assign unique ID for in-memory storage
+        employeeList.add(employee);
+        return employee;
+    }
+
     // Update an existing employee
-    public Employee updateEmployee(Long id, Employee employeeDetails) {
+    public Employee updateEmployee(Long id, EmployeeDTO employeeDetails) {
         log.info("Updating employee with ID: {}", id);
         if (USE_DATABASE) {
             Employee employee = repository.findById(id).orElseThrow();
@@ -83,21 +97,6 @@ public class EmployeeService {
             return;
         }
         employeeList.removeIf(emp -> emp.getId().equals(id));
-    }
-
-    // Save Employee using DTO
-    public EmployeeDTO saveEmployeeDTO(EmployeeDTO employeeDTO) {
-        log.info("Saving new employee using DTO: {}", employeeDTO);
-        if (USE_DATABASE) {
-            Employee employee = new Employee(employeeDTO.getName(), employeeDTO.getSalary());
-            Employee savedEmployee = repository.save(employee);
-            return new EmployeeDTO(savedEmployee.getName(), savedEmployee.getSalary());
-        }
-
-        Employee employee = new Employee(employeeDTO.getName(), employeeDTO.getSalary());
-        employee.setId(idCounter.getAndIncrement()); // Assign unique ID for in-memory storage
-        employeeList.add(employee);
-        return new EmployeeDTO(employee.getName(), employee.getSalary());
     }
 
     // Get all employees as DTO
