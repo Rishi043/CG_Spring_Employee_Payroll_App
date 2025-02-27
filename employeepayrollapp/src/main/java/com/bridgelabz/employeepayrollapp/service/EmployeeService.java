@@ -17,6 +17,7 @@ import java.util.stream.Collectors;
 @Slf4j // UC-7: Lombok annotation to enable logging
 public class EmployeeService {
 
+    // UC-9 Add Database setting as Environment Variable
     private static final boolean USE_DATABASE = true; 
 
     @Autowired
