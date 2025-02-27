@@ -1,29 +1,26 @@
 package com.bridgelabz.employeepayrollapp.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
 import lombok.Data;
-
+import lombok.NoArgsConstructor;
+import lombok.AllArgsConstructor;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Size;
+import jakarta.validation.constraints.Min;
 
-// UC-6 Use Lombok Library to auto generate getters and setters for the DTO
-@Getter
-@Setter
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Data
-
 public class EmployeeDTO {
 
-// UC-10: Validate that the name field is not empty
-          // Validate that the name field follows the pattern
+    // UC-10: Add validation annotations
+    // UC-10: Validation to make name field required
     @NotBlank(message = "Name is required")
-    @Pattern(regexp = "^[A-Za-z\\s]+$", message = "Employee name invalid!!")
+    @Size(min = 3, message = "Name must be at least 3 characters long")
+    @Pattern(regexp = "^[A-Za-z\\s]+$", message = "Name must contain only alphabets and spaces")
     private String name;
 
-
+    // Validation for salary field
+    @Min(value = 10000, message = "Min Wage should be more than 500")
     private double salary;
 }
