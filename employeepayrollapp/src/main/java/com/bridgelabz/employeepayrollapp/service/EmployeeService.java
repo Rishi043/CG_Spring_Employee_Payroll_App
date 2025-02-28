@@ -45,24 +45,23 @@ public class EmployeeService {
         return employeeList.stream().filter(emp -> emp.getId().equals(id)).findFirst();
     }
 
-    // Save a new employee
-    public Employee saveEmployee(Employee employee) {
-        log.info("Saving new employee: {}", employee);
-        if (USE_DATABASE) {
-            return repository.save(employee);
-        }
-        employee.setId(idCounter.getAndIncrement()); // Assign unique ID for in-memory storage
-        employeeList.add(employee);
-        return employee;
-    }
-
     // Save a new employee using DTO
     public Employee saveEmployeeDTO(EmployeeDTO employeeDTO) {
         log.info("Saving new employee using DTO: {}", employeeDTO);
-        Employee employee = new Employee(employeeDTO.getName(), employeeDTO.getSalary());
+
+        // Creating Employee object with all fields from EmployeeDTO
+        Employee employee = new Employee(
+                employeeDTO.getName(),
+                employeeDTO.getSalary(),
+                employeeDTO.getGender(),        // UC-13: Added gender field
+                employeeDTO.getStartDate(),     // UC-13: Added startDate field
+                employeeDTO.getNote(),          // UC-13: Added note field
+                employeeDTO.getProfilePic(),    // UC-13: Added profilePic field
+                employeeDTO.getDepartment()     // UC-13: Added department field
+        );
+
         if (USE_DATABASE) {
-            Employee savedEmployee = repository.save(employee);
-            return savedEmployee;
+            return repository.save(employee);
         }
 
         employee.setId(idCounter.getAndIncrement()); // Assign unique ID for in-memory storage
@@ -75,17 +74,35 @@ public class EmployeeService {
         log.info("Updating employee with ID: {}", id);
         if (USE_DATABASE) {
             // UC-12: Throw EmployeeNotFoundException if employee ID is not found
-            Employee employee = repository.findById(id).orElseThrow(() -> new EmployeeNotFoundException("Employee not found with ID: " + id));
+            Employee employee = repository.findById(id).orElseThrow(() ->
+                    new EmployeeNotFoundException("Employee not found with ID: " + id)
+            );
+
+            // Updating employee details
             employee.setName(employeeDetails.getName());
             employee.setSalary(employeeDetails.getSalary());
+            employee.setGender(employeeDetails.getGender());      // UC-13: Added gender field update
+            employee.setStartDate(employeeDetails.getStartDate());// UC-13: Added startDate field update
+            employee.setNote(employeeDetails.getNote());          // UC-13: Added note field update
+            employee.setProfilePic(employeeDetails.getProfilePic());// UC-13: Added profilePic field update
+            employee.setDepartment(employeeDetails.getDepartment());// UC-13: Added department field update
+
             return repository.save(employee);
         }
 
         Optional<Employee> existingEmployee = getEmployeeById(id);
         if (existingEmployee.isPresent()) {
             Employee employee = existingEmployee.get();
+
+            // Updating employee details
             employee.setName(employeeDetails.getName());
             employee.setSalary(employeeDetails.getSalary());
+            employee.setGender(employeeDetails.getGender());
+            employee.setStartDate(employeeDetails.getStartDate());
+            employee.setNote(employeeDetails.getNote());
+            employee.setProfilePic(employeeDetails.getProfilePic());
+            employee.setDepartment(employeeDetails.getDepartment());
+
             return employee;
         }
         throw new EmployeeNotFoundException("Employee not found with ID: " + id); // UC-12: Throw custom exception
@@ -110,11 +127,27 @@ public class EmployeeService {
         log.info("Fetching all employees as DTOs");
         if (USE_DATABASE) {
             return repository.findAll().stream()
-                    .map(emp -> new EmployeeDTO(emp.getName(), emp.getSalary()))
+                    .map(emp -> new EmployeeDTO(
+                            emp.getName(),
+                            emp.getSalary(),
+                            emp.getGender(),       // UC-13: Added gender field in DTO
+                            emp.getStartDate(),    // UC-13: Added startDate field in DTO
+                            emp.getNote(),         // UC-13: Added note field in DTO
+                            emp.getProfilePic(),   // UC-13: Added profilePic field in DTO
+                            emp.getDepartment()    // UC-13: Added department field in DTO
+                    ))
                     .collect(Collectors.toList());
         }
         return employeeList.stream()
-                .map(emp -> new EmployeeDTO(emp.getName(), emp.getSalary()))
+                .map(emp -> new EmployeeDTO(
+                        emp.getName(),
+                        emp.getSalary(),
+                        emp.getGender(),
+                        emp.getStartDate(),
+                        emp.getNote(),
+                        emp.getProfilePic(),
+                        emp.getDepartment()
+                ))
                 .collect(Collectors.toList());
     }
 }
