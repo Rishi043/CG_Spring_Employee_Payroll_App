@@ -1,15 +1,13 @@
 package com.bridgelabz.employeepayrollapp.dto;
 
+import jakarta.validation.constraints.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.AllArgsConstructor;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Pattern;
-import jakarta.validation.constraints.Size;
-import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.NotNull;
+
 import java.util.List;
 import java.time.LocalDate;
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 @Data
 @NoArgsConstructor
@@ -31,15 +29,27 @@ public class EmployeeDTO {
 
     // UC-13: Adding startDate field
     @NotNull(message = "Start date is required")
+
+    // UC-14: Used @JsonFormat(pattern="dd MMM yyyy")
+    @JsonFormat(pattern = "dd MMM yyyy") // Formatting startDate for JSON responses
+    @PastOrPresent(message = "Start date must be in the past or present")
     private LocalDate startDate;
 
     // UC-13: Adding note field
+    // Ensuring note is not blank
+    @NotBlank(message = "Note cannot be blank")
     private String note;
 
     // UC-13: Adding profilePic field
+    // Ensuring profilePic is not blank and follows a URL format
+    @NotBlank(message = "Profile picture URL is required")
+    @Pattern(regexp = "^(http|https)://.*$", message = "Profile picture must be a valid URL")
     private String profilePic;
 
     // UC-13: Adding department as a list (an employee can belong to multiple departments)
+    // Ensuring department is not null or empty
     @NotNull(message = "Department is required")
+    @Size(min = 1, message = "At least one department must be specified")
     private List<String> department;
 }
+
