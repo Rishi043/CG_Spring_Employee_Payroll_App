@@ -17,13 +17,13 @@ public class EmployeeService {
     @Autowired
     private EmployeeRepository repository; // UC-15: Injecting JPA Repository
 
-    // Get all employees
+    // UC-16: Get All Employees
     public List<Employee> getAllEmployees() {
         log.info("Fetching all employees from DB"); // UC-15: Logging DB interaction
         return repository.findAll(); // UC-15: Fetch from DB
     }
 
-    // Get employee by ID
+    // UC-16: Get Employee by ID
     public Optional<Employee> getEmployeeById(Long id) {
         log.info("Fetching employee with ID: {}", id);
         return repository.findById(id); // UC-15: Fetch from DB
@@ -47,7 +47,7 @@ public class EmployeeService {
         return repository.save(employee); // UC-15: Save in DB
     }
 
-    // Update an existing employee
+    //  UC-16: Update Employee
     public Employee updateEmployee(Long id, EmployeeDTO employeeDetails) {
         log.info("Updating employee with ID: {}", id);
 
@@ -66,7 +66,7 @@ public class EmployeeService {
         return repository.save(employee); // UC-15: Update in DB
     }
 
-    // Delete an employee
+    // UC-16: Delete Employee
     public void deleteEmployee(Long id) {
         log.info("Deleting employee with ID: {}", id);
         if (!repository.existsById(id)) {

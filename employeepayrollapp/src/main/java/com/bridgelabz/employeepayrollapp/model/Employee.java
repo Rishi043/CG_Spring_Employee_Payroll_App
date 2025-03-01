@@ -1,13 +1,12 @@
 package com.bridgelabz.employeepayrollapp.model;
 
-import com.fasterxml.jackson.annotation.JsonFormat; // UC-14: Importing for date format
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.AllArgsConstructor;
-import lombok.extern.slf4j.Slf4j; // UC-15: Importing Lombok Logging
-
+import lombok.extern.slf4j.Slf4j;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -35,14 +34,15 @@ public class Employee {
 
     @NotNull(message = "Start date is required") // UC-14: Start date cannot be null
     @PastOrPresent(message = "Start date cannot be in the future") // UC-14: Ensures past or present date
-    @JsonFormat(pattern = "dd MMM yyyy") // UC-14: Store date in '28 Feb 2024' format
-    @Column(name = "start_date", nullable = false) // UC-14: Maps to 'start_date' column
+    @Column(name = "start_date", nullable = false) //  Correct placement
+    @JsonFormat(pattern = "yyyy-MM-dd") // Ensures correct date format
     private LocalDate startDate;
 
     @NotBlank(message = "Note cannot be blank") // UC-14: Validation for non-empty note
     private String note;
 
     @NotBlank(message = "Profile picture URL cannot be blank") // UC-14: Validation for non-empty profilePic
+    @Pattern(regexp = "^(http|https)://.*$", message = "Profile picture must be a valid URL") //  Ensures valid URL
     private String profilePic;
 
     @NotEmpty(message = "Department is required") // UC-14: Ensures at least one department is selected

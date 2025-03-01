@@ -19,14 +19,14 @@ public class EmployeeController {
     @Autowired
     private EmployeeService service;
 
-    // Fetching all employees
+    // UC-16: Get All Employees
     @GetMapping
     public List<Employee> getAllEmployees() {
         log.info("Fetching all employees");
         return service.getAllEmployees();
     }
 
-    // Fetching employee by ID
+    // UC-16: Get All Employees by ID
     @GetMapping("/{id}")
     public ResponseEntity<Employee> getEmployeeById(@PathVariable Long id) {
         log.info("Fetching employee with ID: {}", id);
@@ -52,7 +52,7 @@ public class EmployeeController {
         return service.updateEmployee(id, employeeDTO);
     }
 
-    // Deleting an employee
+    // UC-16: Delete Employee
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteEmployee(@PathVariable Long id) {
         log.info("Deleting employee with ID: {}", id);

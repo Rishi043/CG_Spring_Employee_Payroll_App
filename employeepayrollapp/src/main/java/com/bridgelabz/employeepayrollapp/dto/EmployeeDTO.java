@@ -32,6 +32,7 @@ public class EmployeeDTO {
 
     // UC-14: Used @JsonFormat(pattern="dd MMM yyyy")
     @JsonFormat(pattern = "dd MMM yyyy") // Formatting startDate for JSON responses
+
     @PastOrPresent(message = "Start date must be in the past or present")
     private LocalDate startDate;
 
@@ -52,4 +53,3 @@ public class EmployeeDTO {
     @Size(min = 1, message = "At least one department must be specified")
     private List<String> department;
 }
-
