@@ -1,4 +1,3 @@
-// Creating Class with name EmployeeService to handle business logic for Employee operations
 package com.bridgelabz.employeepayrollapp.service;
 
 import com.bridgelabz.employeepayrollapp.dto.EmployeeDTO;
@@ -12,29 +11,30 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-@Slf4j // Enabling logging for EmployeeService
+@Slf4j
 public class EmployeeService {
 
     @Autowired
-    private EmployeeRepository repository;
+    private EmployeeRepository repository; // UC-15: Injecting JPA Repository
 
-    // Fetching all employees
+    // Get all employees
     public List<Employee> getAllEmployees() {
-        log.info("Fetching all employees from database");
-        return repository.findAll();
+        log.info("Fetching all employees from DB"); // UC-15: Logging DB interaction
+        return repository.findAll(); // UC-15: Fetch from DB
     }
 
-    // Fetching employee by ID
+    // Get employee by ID
     public Optional<Employee> getEmployeeById(Long id) {
         log.info("Fetching employee with ID: {}", id);
-        return repository.findById(id);
+        return repository.findById(id); // UC-15: Fetch from DB
     }
 
-    // Saving a new employee with validations
+    // Save a new employee using DTO
     public Employee saveEmployeeDTO(EmployeeDTO employeeDTO) {
-        log.info("Saving new employee: {}", employeeDTO);
+        log.info("Saving new employee to DB: {}", employeeDTO); // UC-15: Log DB save
 
         Employee employee = new Employee(
+                null, // UC-15: ID is auto-generated
                 employeeDTO.getName(),
                 employeeDTO.getSalary(),
                 employeeDTO.getGender(),
@@ -44,16 +44,17 @@ public class EmployeeService {
                 employeeDTO.getDepartment()
         );
 
-        return repository.save(employee);
+        return repository.save(employee); // UC-15: Save in DB
     }
 
-    // Updating an existing employee with validations
+    // Update an existing employee
     public Employee updateEmployee(Long id, EmployeeDTO employeeDetails) {
         log.info("Updating employee with ID: {}", id);
 
-        Employee employee = repository.findById(id).orElseThrow(() ->
-                new EmployeeNotFoundException("Employee not found with ID: " + id));
+        Employee employee = repository.findById(id)
+                .orElseThrow(() -> new EmployeeNotFoundException("Employee not found with ID: " + id));
 
+        // Updating employee details
         employee.setName(employeeDetails.getName());
         employee.setSalary(employeeDetails.getSalary());
         employee.setGender(employeeDetails.getGender());
@@ -62,16 +63,15 @@ public class EmployeeService {
         employee.setProfilePic(employeeDetails.getProfilePic());
         employee.setDepartment(employeeDetails.getDepartment());
 
-        return repository.save(employee);
+        return repository.save(employee); // UC-15: Update in DB
     }
 
-    // Deleting an employee by ID
+    // Delete an employee
     public void deleteEmployee(Long id) {
         log.info("Deleting employee with ID: {}", id);
-
         if (!repository.existsById(id)) {
             throw new EmployeeNotFoundException("Employee not found with ID: " + id);
         }
-        repository.deleteById(id);
+        repository.deleteById(id); // UC-15: Delete from DB
     }
 }
