@@ -10,31 +10,36 @@ import lombok.extern.slf4j.Slf4j;
 import java.util.List;
 import java.util.Optional;
 
-@Service
 @Slf4j
+@Service // UC-17: Business logic layer for Employee
 public class EmployeeService {
 
     @Autowired
     private EmployeeRepository repository; // UC-15: Injecting JPA Repository
 
+    // UC-17: Retrieve Employees from Sales Department
+    public List<Employee> getEmployeesBySalesDepartment() {
+        log.info("Fetching employees from Sales department");
+        return repository.findEmployeesBySalesDepartment();
+    }
+
     // UC-16: Get All Employees
     public List<Employee> getAllEmployees() {
-        log.info("Fetching all employees from DB"); // UC-15: Logging DB interaction
-        return repository.findAll(); // UC-15: Fetch from DB
+        log.info("Fetching all employees from DB");
+        return repository.findAll();
     }
 
     // UC-16: Get Employee by ID
     public Optional<Employee> getEmployeeById(Long id) {
         log.info("Fetching employee with ID: {}", id);
-        return repository.findById(id); // UC-15: Fetch from DB
+        return repository.findById(id);
     }
 
-    // Save a new employee using DTO
+    // UC-10: Save a new employee using DTO
     public Employee saveEmployeeDTO(EmployeeDTO employeeDTO) {
-        log.info("Saving new employee to DB: {}", employeeDTO); // UC-15: Log DB save
+        log.info("Saving new employee to DB: {}", employeeDTO);
 
         Employee employee = new Employee(
-                null, // UC-15: ID is auto-generated
                 employeeDTO.getName(),
                 employeeDTO.getSalary(),
                 employeeDTO.getGender(),
@@ -44,10 +49,10 @@ public class EmployeeService {
                 employeeDTO.getDepartment()
         );
 
-        return repository.save(employee); // UC-15: Save in DB
+        return repository.save(employee);
     }
 
-    //  UC-16: Update Employee
+    // UC-16: Update Employee
     public Employee updateEmployee(Long id, EmployeeDTO employeeDetails) {
         log.info("Updating employee with ID: {}", id);
 
@@ -63,7 +68,7 @@ public class EmployeeService {
         employee.setProfilePic(employeeDetails.getProfilePic());
         employee.setDepartment(employeeDetails.getDepartment());
 
-        return repository.save(employee); // UC-15: Update in DB
+        return repository.save(employee);
     }
 
     // UC-16: Delete Employee
@@ -72,6 +77,6 @@ public class EmployeeService {
         if (!repository.existsById(id)) {
             throw new EmployeeNotFoundException("Employee not found with ID: " + id);
         }
-        repository.deleteById(id); // UC-15: Delete from DB
+        repository.deleteById(id);
     }
 }
